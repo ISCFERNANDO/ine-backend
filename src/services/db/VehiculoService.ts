@@ -1,0 +1,20 @@
+import { Service } from "@tsed/di";
+import { DatabaseService } from "./database";
+import { STORED_PROCEDURES } from "../../types/stored_procedures";
+import { VehiculoResponse } from "../../models/response/VehiculoResponse";
+
+@Service()
+export class VehiculoService {
+  constructor(private dbService: DatabaseService) {}
+
+  async getVehiculos() {
+    try {
+      let sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_VEHICULO;
+      const resultSet = await this.dbService.query(sqlQuery);
+      let areas: VehiculoResponse[] = resultSet;
+      return areas;
+    } catch (err) {
+      return err;
+    }
+  }
+}
