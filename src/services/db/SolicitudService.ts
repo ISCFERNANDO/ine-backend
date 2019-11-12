@@ -58,4 +58,26 @@ export class SolicitudService {
       return err;
     }
   }
+
+  async getUnconfirmedRequest() {
+    try {
+      let sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_REQUESTS_NO_CONFIRMED;
+      const resultSet = await this.dbService.query(sqlQuery);
+      let requests: SolicitudResponse[] = resultSet;
+      return requests;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async deleteRequest(requestId: number) {
+    try {
+      let sqlQuery: string = STORED_PROCEDURES.DELETE.SP_DELETE_REQUEST;
+      const sqlData = [requestId];
+      await this.dbService.query(sqlQuery, sqlData);
+      return true;
+    } catch (err) {
+      return err;
+    }
+  }
 }

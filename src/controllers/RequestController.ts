@@ -6,6 +6,7 @@ import {
   Get,
   PathParams,
   BodyParams,
+  Delete,
 } from "@tsed/common";
 import { HTTPStatusCodes } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
@@ -57,6 +58,34 @@ export class RequestController {
   async getAllRequest(@Res() res) {
     try {
       const result = await this.solicitudService.getAllRequest();
+      res
+        .status(HTTPStatusCodes.OK)
+        .json(ResponseOkJson(HTTPStatusCodes.OK, result, "OK"));
+    } catch (err) {
+      res
+        .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, {}));
+    }
+  }
+
+  @Get("/unconfirmed")
+  async getUnconfirmedRequests(@Res() res) {
+    try {
+      const result = await this.solicitudService.getUnconfirmedRequest();
+      res
+        .status(HTTPStatusCodes.OK)
+        .json(ResponseOkJson(HTTPStatusCodes.OK, result, "OK"));
+    } catch (err) {
+      res
+        .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, {}));
+    }
+  }
+
+  @Delete("/:requestId")
+  async deleteRequest(@Res() res, @PathParams("requestId") requestId: number) {
+    try {
+      const result = await this.solicitudService.deleteRequest(requestId);
       res
         .status(HTTPStatusCodes.OK)
         .json(ResponseOkJson(HTTPStatusCodes.OK, result, "OK"));
