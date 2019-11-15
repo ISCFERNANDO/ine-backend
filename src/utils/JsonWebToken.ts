@@ -8,11 +8,21 @@ export class JsonWebToken {
       firstLastName: user.firstLastName,
       name: user.name,
       secondLastName: user.secondLastName,
-      areaId: user.areaId,
+      areaId: user.areaId
     };
     let token = await jwt.sign(payload, settings.JWT.KEY, {
-      expiresIn: settings.JWT.LIFE_TIME, //24 horas 60 * 60 * 24
+      expiresIn: settings.JWT.LIFE_TIME //24 horas 60 * 60 * 24
     });
     return token;
+  }
+
+  async validateToken(token: string): Promise<any> {
+    const usedKey: string = settings.JWT.KEY;
+    try {
+      const payload = jwt.verify(token, usedKey);
+      return payload;
+    } catch (err) {
+      throw err;
+    }
   }
 }

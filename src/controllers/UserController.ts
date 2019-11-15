@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, Next, Post } from "@tsed/common";
+import { Controller, Get, Req, Res, Next, Post, Authenticated } from "@tsed/common";
 import { HTTPStatusCodes } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
 import { UserService } from "../services/db/UserService";
@@ -9,6 +9,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
+  @Authenticated()
   async createUser(@Req() req, @Res() res, @Next() next) {
     try {
       let user: CreateUser = new CreateUser();

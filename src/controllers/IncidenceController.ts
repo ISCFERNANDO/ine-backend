@@ -1,10 +1,11 @@
-import { Controller, Res, Post, BodyParams } from "@tsed/common";
+import { Controller, Res, Post, BodyParams, Authenticated } from "@tsed/common";
 import { HTTPStatusCodes } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
 import { IncidenceService } from "../services/db/IncidenceService";
 import { CreateIncidence } from "../models/request/CreateIncidence";
 
 @Controller("/incidences")
+@Authenticated()
 export class IncidenceController {
   constructor(private incidenceService: IncidenceService) {}
 

@@ -1,7 +1,7 @@
 import {
   ServerLoader,
   ServerSettings,
-  GlobalAcceptMimesMiddleware,
+  GlobalAcceptMimesMiddleware
 } from "@tsed/common";
 import "@tsed/swagger";
 const cookieParser = require("cookie-parser");
@@ -9,13 +9,19 @@ const bodyParser = require("body-parser");
 const compress = require("compression");
 const methodOverride = require("method-override");
 const rootDir = __dirname;
+import * as Path from "path";
+
 @ServerSettings({
   rootDir,
   acceptMimes: ["application/json"],
   httpPort: process.env.PORT || 3000,
   httpsPort: false,
   mount: {
-    "/api/v1": `${rootDir}/controllers/**/**.{js,ts}`,
+    "/api/v1": `${rootDir}/controllers/**/**.{js,ts}`
+  },
+  componentsScan: [`${rootDir}/middlewares/**/**.{js,ts}`],
+  statics: {
+    "/media": `${Path.join(rootDir, "..", "media")}`
   },
   swagger: [
     {
@@ -36,7 +42,7 @@ export class Server extends ServerLoader {
       .use(bodyParser.json())
       .use(
         bodyParser.urlencoded({
-          extended: true,
+          extended: true
         })
       )
       .use((req, res, next) => {

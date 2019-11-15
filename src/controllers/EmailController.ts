@@ -1,10 +1,11 @@
-import { Controller, Get, Req, Res, Next } from "@tsed/common";
+import { Controller, Get, Req, Res, Next, Authenticated } from "@tsed/common";
 import { HTTPStatusCodes } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
 import { EmailService } from "../services/utils/EmailService";
 import { EmailRequest } from "../models/request/EmailRequest";
 
 @Controller("/email")
+@Authenticated()
 export class EmailController {
   constructor(private emailService: EmailService) {}
 

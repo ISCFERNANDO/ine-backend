@@ -1,10 +1,11 @@
-import { Controller, Res, Post, BodyParams } from "@tsed/common";
+import { Controller, Res, Post, BodyParams, Authenticated } from "@tsed/common";
 import { HTTPStatusCodes } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
 import { MantenimientoService } from "../services/db/MantenimientoService";
 import { CreateMantenimiento } from "../models/request/CreateMantenimiento";
 
 @Controller("/maintenances")
+@Authenticated()
 export class MaintenanceController {
   constructor(private maintenanceService: MantenimientoService) {}
 

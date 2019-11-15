@@ -1,9 +1,10 @@
-import { Controller, Get, Req, Res, Next } from "@tsed/common";
+import { Controller, Get, Req, Res, Next, Authenticated } from "@tsed/common";
 import { HTTPStatusCodes } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
 import { VehiculoService } from "../services/db/VehiculoService";
 
 @Controller("/cars")
+@Authenticated()
 export class CarController {
   constructor(private vehiculoService: VehiculoService) {}
 

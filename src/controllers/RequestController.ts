@@ -7,6 +7,7 @@ import {
   PathParams,
   BodyParams,
   Delete,
+  Authenticated,
 } from "@tsed/common";
 import { HTTPStatusCodes } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
@@ -15,6 +16,7 @@ import { CreateRequest } from "../models/request/CreateRequest";
 import { UpdateRequest } from "../models/request/UpdateRequest";
 
 @Controller("/requests")
+@Authenticated()
 export class RequestController {
   constructor(private solicitudService: SolicitudService) {}
 
