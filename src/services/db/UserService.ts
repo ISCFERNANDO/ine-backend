@@ -18,7 +18,6 @@ export class UserService {
       let user: UserLoginResponse = resultSet[0];
 
       if (user) {
-        console.log('Hay usuario');
         let jwt: JsonWebToken = new JsonWebToken();
         user.token = await jwt.generateJWT(user);
       }

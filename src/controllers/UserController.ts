@@ -1,5 +1,13 @@
-import { Controller, Get, Req, Res, Next, Post, Authenticated } from "@tsed/common";
-import { HTTPStatusCodes } from "../types/http";
+import {
+  Controller,
+  Get,
+  Req,
+  Res,
+  Next,
+  Post,
+  Authenticated,
+} from "@tsed/common";
+import { HTTPStatusCodes, HTTPStatus } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
 import { UserService } from "../services/db/UserService";
 import { CreateUser } from "../models/request/CreateUser";
@@ -27,12 +35,18 @@ export class UserController {
       const result = await this.userService.create(user);
       res
         .status(HTTPStatusCodes.OK)
-        .json(ResponseOkJson(HTTPStatusCodes.OK, result, "OK"));
+        .json(ResponseOkJson(HTTPStatusCodes.OK, result, HTTPStatus.OK));
     } catch (err) {
       console.log(err);
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, {}));
+        .json(
+          ResponseErrorJson(
+            HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+            err,
+            HTTPStatus.INTERNAL_SERVER_ERROR
+          )
+        );
     }
   }
 
@@ -46,15 +60,27 @@ export class UserController {
       if (!result) {
         return res
           .status(HTTPStatusCodes.UNAUTHORIZED)
-          .json(ResponseErrorJson(HTTPStatusCodes.UNAUTHORIZED, result, "UNAUTHORIZED"));
+          .json(
+            ResponseErrorJson(
+              HTTPStatusCodes.UNAUTHORIZED,
+              result,
+              HTTPStatus.UNAUTHORIZED
+            )
+          );
       }
       res
         .status(HTTPStatusCodes.OK)
-        .json(ResponseOkJson(HTTPStatusCodes.OK, result, "OK"));
+        .json(ResponseOkJson(HTTPStatusCodes.OK, result, HTTPStatus.OK));
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, {}));
+        .json(
+          ResponseErrorJson(
+            HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+            err,
+            HTTPStatus.INTERNAL_SERVER_ERROR
+          )
+        );
     }
   }
 }
