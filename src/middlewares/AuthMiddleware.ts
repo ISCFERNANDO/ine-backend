@@ -32,7 +32,6 @@ export class AuthMiddleware implements IMiddleware {
       }
       let jwt: JsonWebToken = new JsonWebToken();
       req.user = await jwt.validateToken(token);
-      console.log("USER", req.user);
     } catch (err) {
       res
         .status(HTTPStatusCodes.FORBIDDEN)
