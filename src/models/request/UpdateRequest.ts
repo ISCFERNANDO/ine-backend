@@ -8,5 +8,5 @@ export class UpdateRequest {
   @Property()
   finalGasoline: string;
   @Property()
-  incidentBumps: string;
+  incidentBumps: string[];
 }

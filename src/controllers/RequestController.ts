@@ -9,7 +9,7 @@ import {
   Delete,
   Authenticated,
 } from "@tsed/common";
-import { HTTPStatusCodes } from "../types/http";
+import { HTTPStatusCodes, HTTPStatus } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
 import { SolicitudService } from "../services/db/SolicitudService";
 import { CreateRequest } from "../models/request/CreateRequest";
@@ -31,7 +31,7 @@ export class RequestController {
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, {}));
+        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, err, HTTPStatus.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -52,7 +52,7 @@ export class RequestController {
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, {}));
+        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, err, HTTPStatus.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -66,7 +66,7 @@ export class RequestController {
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, {}));
+        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, err, HTTPStatus.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -80,7 +80,7 @@ export class RequestController {
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, {}));
+        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, err, HTTPStatus.INTERNAL_SERVER_ERROR));
     }
   }
 
@@ -94,7 +94,7 @@ export class RequestController {
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, {}));
+        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, err, HTTPStatus.INTERNAL_SERVER_ERROR));
     }
   }
 }

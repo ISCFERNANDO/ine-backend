@@ -22,5 +22,5 @@ export class CreateRequest {
   @Property()
   requestedFuel: string;
   @Property()
-  bumpsFailures: string;
+  bumpsFailures: number[];
 }

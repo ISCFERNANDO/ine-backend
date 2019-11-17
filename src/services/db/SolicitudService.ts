@@ -12,7 +12,7 @@ export class SolicitudService {
   async createRequest(request: CreateRequest) {
     try {
       let sqlQuery: string = STORED_PROCEDURES.CREATE_UPDATE.SP_CREATE_REQUEST;
-      const sqlData = [
+      let sqlData = [
         request.areaId,
         request.vehiculoId,
         request.names,
@@ -23,25 +23,31 @@ export class SolicitudService {
         request.initialMileage,
         request.initialGasoline,
         request.requestedFuel,
-        request.bumpsFailures,
       ];
-      await this.dbService.query(sqlQuery, sqlData);
+
+      //add request
+      let resultSet = await this.dbService.query(sqlQuery, sqlData);
+      let { id } = resultSet[0];
+      //add bumps and failures
+      await this.addFailuresRequest(id, request.bumpsFailures);
       return true;
     } catch (err) {
-      return err;
+      throw err;
     }
   }
 
   async updateRequest(request: UpdateRequest, requestId: number) {
     try {
       let sqlQuery: string = STORED_PROCEDURES.CREATE_UPDATE.SP_UPDATE_REQUEST;
-      const sqlData = [
+      let sqlData = [
         requestId,
         request.finalMileage,
         request.finalGasoline,
         request.incidentBumps,
       ];
       await this.dbService.query(sqlQuery, sqlData);
+      //add bumps and failures
+      await this.addFailuresRequest(requestId, request.incidentBumps);
       return true;
     } catch (err) {
       return err;
@@ -78,6 +84,18 @@ export class SolicitudService {
       return true;
     } catch (err) {
       return err;
+    }
+  }
+
+  async addFailuresRequest(requestId, incidentBumps) {
+    //add bumps and failures
+    let sqlQuery, sqlData;
+    if (Array.isArray(incidentBumps)) {
+      incidentBumps.forEach(async item => {
+        sqlQuery = STORED_PROCEDURES.CREATE_UPDATE.SP_ADD_REQUEST_INCIDENCE;
+        sqlData = [requestId, item];
+        await this.dbService.query(sqlQuery, sqlData);
+      });
     }
   }
 }

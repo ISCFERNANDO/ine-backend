@@ -6,15 +6,17 @@ export const STORED_PROCEDURES = {
     SP_GET_VEHICULO: "CALL sp_get_vehiculo()",
     SP_GET_REQUESTS: "CALL sp_obtener_solicitudes()",
     SP_GET_REQUESTS_NO_CONFIRMED: "CALL sp_obtener_solicitudes_sin_confirmar()",
+    SP_GET_CATALOG_INCIDENTS: "CALL sp_obtener_catalogo_incidencias()"
   },
   CREATE_UPDATE: {
     SP_CREATE_UPDATE_USER: "CALL sp_create_update_user(?, ?, ?, ?, ?, ?, ?, ?)",
     SP_CREATE_REQUEST:
-      "CALL sp_agregar_solicitud(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    SP_UPDATE_REQUEST: "CALL sp_update_solicitud(?, ?, ?, ?)",
+      "CALL sp_agregar_solicitud(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    SP_UPDATE_REQUEST: "CALL sp_update_solicitud(?, ?, ?)",
     SP_ADD_MANITENANCE:
       "CALL sp_agregar_mantenimiento(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     SP_ADD_INCIDENCE: "CALL sp_agregar_incidencia(?, ?, ?, ?, ?, ?, ?, ?)",
+    SP_ADD_REQUEST_INCIDENCE: "CALL sp_agregar_golpes_fallas_solicitud(?, ?)"
   },
   DELETE: {
     SP_DELETE_REQUEST: "CALL sp_eliminar_solicitud(?)",
