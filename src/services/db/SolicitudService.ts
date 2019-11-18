@@ -4,6 +4,7 @@ import { STORED_PROCEDURES } from "../../types/stored_procedures";
 import { CreateRequest } from "../../models/request/CreateRequest";
 import { UpdateRequest } from "../../models/request/UpdateRequest";
 import { SolicitudResponse } from "../../models/response/SolicitudResponse";
+import { SolicitudPendienteResponse } from "../../models/response/SolicitudPendienteResponse";
 
 @Service()
 export class SolicitudService {
@@ -96,6 +97,21 @@ export class SolicitudService {
         sqlData = [requestId, item];
         await this.dbService.query(sqlQuery, sqlData);
       });
+    }
+  }
+
+  async getPedingRequests(
+    carId: number
+  ): Promise<SolicitudPendienteResponse[]> {
+    try {
+      let sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_REQUESTS_PENDING;
+      let sqlData = [carId];
+
+      const resultSet = await this.dbService.query(sqlQuery, sqlData);
+      const solicitudesPendientes: SolicitudPendienteResponse[] = resultSet;
+      return solicitudesPendientes;
+    } catch (err) {
+      throw err;
     }
   }
 }

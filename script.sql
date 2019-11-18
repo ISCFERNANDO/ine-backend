@@ -90,3 +90,25 @@ END$$
 
 DELIMITER ;
 
+
+
+/*17 nov 2019*/
+USE `ine_project`;
+DROP procedure IF EXISTS `sp_obtener_solicitudes_pendientes`;
+
+DELIMITER $$
+USE `ine_project`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obtener_solicitudes_pendientes`(
+	IN _carId INT
+)
+BEGIN
+	SELECT S.id, CONCAT(names, ' ', surnames) AS applicant, date_order AS dateOrder, 
+		date_deliver AS dateDeliver, V.category, V.placa
+		FROM solicitud AS S INNER JOIN vehiculo AS V ON (S.vehiculo_id = V.id)
+		WHERE V.id = _carId AND S.visible;
+END$$
+
+DELIMITER ;
+
+
+

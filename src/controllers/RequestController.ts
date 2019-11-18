@@ -31,7 +31,13 @@ export class RequestController {
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, err, HTTPStatus.INTERNAL_SERVER_ERROR));
+        .json(
+          ResponseErrorJson(
+            HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+            err,
+            HTTPStatus.INTERNAL_SERVER_ERROR
+          )
+        );
     }
   }
 
@@ -52,7 +58,13 @@ export class RequestController {
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, err, HTTPStatus.INTERNAL_SERVER_ERROR));
+        .json(
+          ResponseErrorJson(
+            HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+            err,
+            HTTPStatus.INTERNAL_SERVER_ERROR
+          )
+        );
     }
   }
 
@@ -66,7 +78,13 @@ export class RequestController {
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, err, HTTPStatus.INTERNAL_SERVER_ERROR));
+        .json(
+          ResponseErrorJson(
+            HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+            err,
+            HTTPStatus.INTERNAL_SERVER_ERROR
+          )
+        );
     }
   }
 
@@ -80,7 +98,13 @@ export class RequestController {
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, err, HTTPStatus.INTERNAL_SERVER_ERROR));
+        .json(
+          ResponseErrorJson(
+            HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+            err,
+            HTTPStatus.INTERNAL_SERVER_ERROR
+          )
+        );
     }
   }
 
@@ -94,7 +118,33 @@ export class RequestController {
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
-        .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, err, HTTPStatus.INTERNAL_SERVER_ERROR));
+        .json(
+          ResponseErrorJson(
+            HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+            err,
+            HTTPStatus.INTERNAL_SERVER_ERROR
+          )
+        );
+    }
+  }
+
+  @Get("/byCar/:carId")
+  async getAllRequestsPending(@Res() res, @PathParams("carId") carId: number) {
+    try {
+      const data = await this.solicitudService.getPedingRequests(carId);
+      res
+        .status(HTTPStatusCodes.OK)
+        .json(ResponseOkJson(HTTPStatusCodes.OK, data, HTTPStatus.OK));
+    } catch (err) {
+      res
+        .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(
+          ResponseErrorJson(
+            HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+            err,
+            HTTPStatus.INTERNAL_SERVER_ERROR
+          )
+        );
     }
   }
 }
