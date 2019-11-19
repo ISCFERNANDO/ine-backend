@@ -13,4 +13,6 @@ export class SolicitudPendienteResponse {
   category: string;
   @Property()
   placa: string;
+  @Property()
+  finalMileage: string;
 }

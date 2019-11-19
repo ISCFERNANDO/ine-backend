@@ -112,3 +112,72 @@ DELIMITER ;
 
 
 
+ALTER TABLE `ine_project`.`vehiculo` 
+ADD COLUMN `kilometraje` BIGINT NOT NULL DEFAULT 0 AFTER `color`;
+
+
+USE `ine_project`;
+DROP procedure IF EXISTS `sp_get_vehiculo`;
+
+DELIMITER $$
+USE `ine_project`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_vehiculo`()
+BEGIN
+	SELECT id, placa, description, category, year, model, color, 
+		CAST(active AS UNSIGNED) AS active, kilometraje AS mileage
+		FROM vehiculo WHERE visible = 1;
+END$$
+
+DELIMITER ;
+
+
+USE `ine_project`;
+DROP procedure IF EXISTS `sp_update_solicitud`;
+
+
+DELIMITER $$
+USE `ine_project`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_solicitud`(
+	IN _requestId INT,
+	IN _finalMileage VARCHAR(15),
+	IN _finalGasoline VARCHAR(15)
+)
+BEGIN
+	DECLARE carId INT;
+	UPDATE solicitud SET
+		final_mileage = _finalMileage,
+		final_gasoline = _finalGasoline,
+		estatus = 'ENTREGADO'
+	WHERE id = _requestId;
+
+	SET carId = (SELECT vehiculo_id FROM solicitud WHERE id = _requestId);
+	UPDATE vehiculo SET kilometraje = _finalMileage 
+		WHERE id = carId;
+END$$
+
+DELIMITER ;
+
+
+
+USE `ine_project`;
+DROP procedure IF EXISTS `sp_obtener_solicitudes_sin_confirmar`;
+
+DELIMITER $$
+USE `ine_project`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obtener_solicitudes_sin_confirmar`()
+BEGIN
+	SELECT solicitud.id, area_id AS areaId, v.category AS carCategory, v.placa AS carPlaca, names, surnames,
+		date_order AS dateOrder, date_deliver AS dateDeliver, 
+		reason_requirement AS reasonRequirement, initial_mileage AS initialMileage,
+		initial_gasoline AS initialGasoline, requested_fuel AS requestedFuel,
+		bumps_failures AS bumpsFailures, solicitud.created_at AS createdAt,
+		solicitud.udated_at AS updatedAt, final_mileage AS finalMileage,
+		final_gasoline AS finalGasoline, incident_bumps AS incidentBumps, estatus AS status,
+		CAST(solicitud.active AS UNSIGNED) AS active FROM solicitud
+	INNER JOIN vehiculo AS v ON (solicitud.vehiculo_id=v.id)
+	WHERE estatus = 'PRESTADO' AND confirmed = 0 AND solicitud.visible;
+END$$
+
+DELIMITER ;
+
+

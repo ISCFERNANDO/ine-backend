@@ -6,5 +6,6 @@ export class VehiculoResponse {
   year: number;
   model: string;
   color: string;
+  mileage: string;
   active: boolean;
 }
