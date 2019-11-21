@@ -27,7 +27,11 @@ export class DatabaseService {
     try {
       return await this.promisePool.query(query, data).then(([rows]) => {
         let resultSet = rows.length > 1 ? rows.slice(0, rows.length - 1) : [];
-        return resultSet[0];
+        if(resultSet.length === 1){
+          return resultSet[0];
+        } else {
+          return resultSet;
+        }
       });
     } catch (err) {
       console.log(err);

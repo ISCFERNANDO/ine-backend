@@ -23,4 +23,8 @@ export class CreateRequest {
   requestedFuel: string;
   @Property()
   bumpsFailures: number[];
+  @Property()
+  orderTime: string;
+  @Property()
+  deliveryTime: string;
 }

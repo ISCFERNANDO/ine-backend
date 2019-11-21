@@ -10,7 +10,7 @@ import { SolicitudPendienteResponse } from "../../models/response/SolicitudPendi
 export class SolicitudService {
   constructor(private dbService: DatabaseService) {}
 
-  async createRequest(request: CreateRequest) {
+  async createRequest(request: CreateRequest, userId: number) {
     try {
       let sqlQuery: string = STORED_PROCEDURES.CREATE_UPDATE.SP_CREATE_REQUEST;
       let sqlData = [
@@ -24,11 +24,18 @@ export class SolicitudService {
         request.initialMileage,
         request.initialGasoline,
         request.requestedFuel,
+        userId,
+        request.orderTime,
+        request.deliveryTime,
       ];
 
       //add request
       let resultSet = await this.dbService.query(sqlQuery, sqlData);
-      let { id } = resultSet[0];
+      let estatus = resultSet[0];
+      if (estatus.code === 0) {
+        return false;
+      }
+      let { id } = resultSet[1];
       //add bumps and failures
       await this.addFailuresRequest(id, request.bumpsFailures);
       return true;
@@ -37,14 +44,18 @@ export class SolicitudService {
     }
   }
 
-  async updateRequest(request: UpdateRequest, requestId: number) {
+  async updateRequest(
+    request: UpdateRequest,
+    requestId: number,
+    userId: number
+  ) {
     try {
       let sqlQuery: string = STORED_PROCEDURES.CREATE_UPDATE.SP_UPDATE_REQUEST;
       let sqlData = [
         requestId,
         request.finalMileage,
         request.finalGasoline,
-        request.incidentBumps,
+        userId,
       ];
       await this.dbService.query(sqlQuery, sqlData);
       //add bumps and failures

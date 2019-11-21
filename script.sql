@@ -181,3 +181,225 @@ END$$
 DELIMITER ;
 
 
+CREATE TABLE `ine_project`.`cat_gasolinas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `active` TINYINT NOT NULL DEFAULT 1,
+  `visible` TINYINT NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+);
+
+INSERT INTO cat_gasolinas(name) values('Vacio'), ('1/4'), ('1/2'), ('3/4'), ('Lleno');
+
+USE `ine_project`;
+DROP procedure IF EXISTS `sp_obtener_cat_gasolina`;
+
+DELIMITER $$
+USE `ine_project`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obtener_cat_gasolina`()
+BEGIN
+	SELECT id, name, active FROM cat_gasolinas WHERE visible;
+END$$
+
+DELIMITER ;
+
+
+
+ALTER TABLE `ine_project`.`solicitud` 
+ADD COLUMN `created_user_id` INT NULL AFTER `incident_bumps`,
+ADD COLUMN `updated_user_id` INT NULL AFTER `created_user_id`;
+
+USE `ine_project`;
+DROP procedure IF EXISTS `sp_agregar_solicitud`;
+
+DELIMITER $$
+USE `ine_project`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_agregar_solicitud`(
+	IN _areaId INT,
+	IN _vehiculoId INT,
+	IN _names VARCHAR(60),
+	IN _surnames VARCHAR(60),
+	IN _dateOrder DATE,
+	IN _dateDeliver DATE,
+	IN _reasonRequirement VARCHAR(400),
+	IN _initialMileage VARCHAR(15),
+	IN _initialGasoline VARCHAR(15),
+	IN _requestedFuel VARCHAR(15),
+	IN _userId INT
+)
+BEGIN
+	INSERT INTO solicitud(area_id, vehiculo_id, names, surnames, 
+		date_order, date_deliver, reason_requirement, initial_mileage, 
+		initial_gasoline, requested_fuel, estatus, created_user_id) 
+	VALUES(
+		_areaId, _vehiculoId, _names, _surnames,
+		_dateOrder, _dateDeliver, _reasonRequirement, _initialMileage,
+		_initialGasoline, _requestedFuel, 'PRESTADO', _userId
+	);
+
+	SELECT last_insert_id() AS id;
+END$$
+
+DELIMITER ;
+
+
+USE `ine_project`;
+DROP procedure IF EXISTS `sp_update_solicitud`;
+
+DELIMITER $$
+USE `ine_project`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_solicitud`(
+	IN _requestId INT,
+	IN _finalMileage VARCHAR(15),
+	IN _finalGasoline VARCHAR(15),
+	IN _userId INT
+)
+BEGIN
+	DECLARE carId INT;
+	UPDATE solicitud SET
+		final_mileage = _finalMileage,
+		final_gasoline = _finalGasoline,
+		estatus = 'ENTREGADO',
+		updated_user_id = _userId
+	WHERE id = _requestId;
+
+	SET carId = (SELECT vehiculo_id FROM solicitud WHERE id = _requestId);
+	UPDATE vehiculo SET kilometraje = _finalMileage 
+		WHERE id = carId;
+END$$
+
+DELIMITER ;
+
+ALTER TABLE `ine_project`.`vehiculo` 
+ADD COLUMN `status` TINYINT NULL DEFAULT 1 AFTER `visible`;
+
+
+USE `ine_project`;
+DROP procedure IF EXISTS `sp_agregar_solicitud`;
+
+DELIMITER $$
+USE `ine_project`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_agregar_solicitud`(
+	IN _areaId INT,
+	IN _vehiculoId INT,
+	IN _names VARCHAR(60),
+	IN _surnames VARCHAR(60),
+	IN _dateOrder DATE,
+	IN _dateDeliver DATE,
+	IN _reasonRequirement VARCHAR(400),
+	IN _initialMileage VARCHAR(15),
+	IN _initialGasoline VARCHAR(15),
+	IN _requestedFuel VARCHAR(15),
+	IN _userId INT
+)
+BEGIN
+	IF EXISTS(SELECT id FROM vehiculo WHERE id = _vehiculoId AND status = 1) THEN
+		BEGIN
+			INSERT INTO solicitud(area_id, vehiculo_id, names, surnames, 
+				date_order, date_deliver, reason_requirement, initial_mileage, 
+				initial_gasoline, requested_fuel, estatus, created_user_id) 
+			VALUES(
+				_areaId, _vehiculoId, _names, _surnames,
+				_dateOrder, _dateDeliver, _reasonRequirement, _initialMileage,
+				_initialGasoline, _requestedFuel, 'PRESTADO', _userId
+			);
+			UPDATE vehiculo SET status = 0 WHERE id = _vehiculoId;
+			SELECT 1 AS code, 'Operacion exitosa' AS message;
+			SELECT last_insert_id() AS id;
+		END;
+	ELSE
+		BEGIN
+			SELECT 0 AS code, 'El automoviles solicitado no está disponible' AS message;
+		END;
+	END IF;
+END$$
+
+DELIMITER ;
+
+
+
+USE `ine_project`;
+DROP procedure IF EXISTS `sp_update_solicitud`;
+
+DELIMITER $$
+USE `ine_project`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_solicitud`(
+	IN _requestId INT,
+	IN _finalMileage VARCHAR(15),
+	IN _finalGasoline VARCHAR(15),
+	IN _userId INT
+)
+BEGIN
+	DECLARE carId INT;
+	UPDATE solicitud SET
+		final_mileage = _finalMileage,
+		final_gasoline = _finalGasoline,
+		estatus = 'ENTREGADO',
+		updated_user_id = _userId
+	WHERE id = _requestId;
+
+	SET carId = (SELECT vehiculo_id FROM solicitud WHERE id = _requestId);
+	UPDATE vehiculo SET 
+		kilometraje = _finalMileage,
+		status = 1
+	WHERE id = carId;
+END$$
+
+DELIMITER ;
+
+
+ALTER TABLE `ine_project`.`solicitud` 
+ADD COLUMN `order_time` VARCHAR(15) NOT NULL AFTER `updated_user_id`,
+ADD COLUMN `delivery_time` VARCHAR(15) NULL AFTER `created_time`;
+
+
+
+USE `ine_project`;
+DROP procedure IF EXISTS `sp_agregar_solicitud`;
+
+DELIMITER $$
+USE `ine_project`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_agregar_solicitud`(
+	IN _areaId INT,
+	IN _vehiculoId INT,
+	IN _names VARCHAR(60),
+	IN _surnames VARCHAR(60),
+	IN _dateOrder DATE,
+	IN _dateDeliver DATE,
+	IN _reasonRequirement VARCHAR(400),
+	IN _initialMileage VARCHAR(15),
+	IN _initialGasoline VARCHAR(15),
+	IN _requestedFuel VARCHAR(15),
+	IN _userId INT,
+	IN _orderTime VARCHAR(15),
+	IN _deliveryTime VARCHAR(15)
+)
+BEGIN
+	IF EXISTS(SELECT id FROM vehiculo WHERE id = _vehiculoId AND status = 1) THEN
+		BEGIN
+			INSERT INTO solicitud(area_id, vehiculo_id, names, surnames, 
+				date_order, date_deliver, reason_requirement, initial_mileage, 
+				initial_gasoline, requested_fuel, estatus, created_user_id,
+				order_time, delivery_time) 
+			VALUES(
+				_areaId, _vehiculoId, _names, _surnames,
+				_dateOrder, _dateDeliver, _reasonRequirement, _initialMileage,
+				_initialGasoline, _requestedFuel, 'PRESTADO', _userId,
+				_orderTime, _deliveryTime
+			);
+			UPDATE vehiculo SET status = 0 WHERE id = _vehiculoId;
+			SELECT 1 AS code, 'Operacion exitosa' AS message;
+			SELECT last_insert_id() AS id;
+		END;
+	ELSE
+		BEGIN
+			SELECT 0 AS code, 'El automoviles solicitado no está disponible' AS message;
+		END;
+	END IF;
+END$$
+
+DELIMITER ;
+
