@@ -9,9 +9,10 @@ export const STORED_PROCEDURES = {
     SP_GET_CATALOG_INCIDENTS: "CALL sp_obtener_catalogo_incidencias()",
     SP_GET_REQUESTS_PENDING: "CALL sp_obtener_solicitudes_pendientes(?)",
     SP_GET_GASOLINE: "CALL sp_obtener_cat_gasolina()",
+    SP_GET_USER_TYPES: "CALL sp_get_tipos_usuario()"
   },
   CREATE_UPDATE: {
-    SP_CREATE_UPDATE_USER: "CALL sp_create_update_user(?, ?, ?, ?, ?, ?, ?, ?)",
+    SP_CREATE_UPDATE_USER: "CALL sp_create_update_user(?, ?, ?, ?, ?, ?, ?, ?, ?)",
     SP_CREATE_REQUEST:
       "CALL sp_agregar_solicitud(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     SP_UPDATE_REQUEST: "CALL sp_update_solicitud(?, ?, ?, ?)",

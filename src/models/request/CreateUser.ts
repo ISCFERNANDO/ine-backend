@@ -5,6 +5,7 @@ export class CreateUser {
   email: string;
   password: string;
   areaId: number;
+  userType: number;
   userId: number;
   active: boolean;
 
@@ -16,7 +17,8 @@ export class CreateUser {
     password?: string,
     areaId?: number,
     userId?: number,
-    active?: boolean
+    active?: boolean,
+    userType?: number
   ) {
     this.name = name;
     this.firstLastName = firstLastName;
@@ -26,5 +28,6 @@ export class CreateUser {
     this.areaId = areaId;
     this.userId = userId;
     this.active = active;
+    this.userType = userType;
   }
 }

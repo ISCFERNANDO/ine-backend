@@ -31,6 +31,7 @@ export class UserController {
       user.password = body.password;
       user.secondLastName = body.secondLastName;
       user.userId = -1;
+      user.userType = body.userType;
 
       const result = await this.userService.create(user);
       res
@@ -68,6 +69,26 @@ export class UserController {
             )
           );
       }
+      res
+        .status(HTTPStatusCodes.OK)
+        .json(ResponseOkJson(HTTPStatusCodes.OK, result, HTTPStatus.OK));
+    } catch (err) {
+      res
+        .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(
+          ResponseErrorJson(
+            HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+            err,
+            HTTPStatus.INTERNAL_SERVER_ERROR
+          )
+        );
+    }
+  }
+
+  @Get("/userType")
+  async userTypes(@Req() req, @Res() res) {
+    try {
+      const result = await this.userService.getTypesUser();
       res
         .status(HTTPStatusCodes.OK)
         .json(ResponseOkJson(HTTPStatusCodes.OK, result, HTTPStatus.OK));

@@ -5,6 +5,7 @@ import { CreateUser } from "../../models/request/CreateUser";
 import { throws } from "assert";
 import { UserLoginResponse } from "../../models/response/UserLoginResponse";
 import { JsonWebToken } from "../../utils/JsonWebToken";
+import { UserType } from "../../models/response/UserType";
 
 @Service()
 export class UserService {
@@ -40,6 +41,7 @@ export class UserService {
         user.areaId,
         user.userId,
         user.active,
+        user.userType
       ];
       await this.dbService.query(sqlQuery, sqlData);
       return true;
@@ -61,11 +63,23 @@ export class UserService {
         user.areaId,
         user.userId,
         user.active,
+        user.userType
       ];
       await this.dbService.query(sqlQuery, sqlData);
       return true;
     } catch (err) {
       return err;
+    }
+  }
+
+  async getTypesUser() {
+    try {
+      let sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_USER_TYPES;
+      let resultSet = await this.dbService.query(sqlQuery);
+      let userTypes: UserType[] = resultSet;
+      return userTypes;
+    } catch (err) {
+      throw err;
     }
   }
 }
