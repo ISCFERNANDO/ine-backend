@@ -3,7 +3,10 @@ import { DatabaseService } from "./database";
 import { STORED_PROCEDURES } from "../../types/stored_procedures";
 import { CreateUser } from "../../models/request/CreateUser";
 import { throws } from "assert";
-import { UserLoginResponse } from "../../models/response/UserLoginResponse";
+import {
+  UserLoginResponse,
+  Accesse,
+} from "../../models/response/UserLoginResponse";
 import { JsonWebToken } from "../../utils/JsonWebToken";
 import { UserType } from "../../models/response/UserType";
 
@@ -16,9 +19,11 @@ export class UserService {
       let sqlQuery: string = STORED_PROCEDURES.GET.SP_LOGIN;
       let sqlData = [userLogin.email, userLogin.password];
       const resultSet = await this.dbService.query(sqlQuery, sqlData);
-      let user: UserLoginResponse = resultSet[0];
-
-      if (user) {
+      let user: UserLoginResponse;
+      console.log(resultSet);
+      if (resultSet && resultSet.length > 0 && resultSet[0].length > 0) {
+        user = resultSet[0][0];
+        user.accesses = resultSet[1];
         let jwt: JsonWebToken = new JsonWebToken();
         user.token = await jwt.generateJWT(user);
       }
@@ -41,7 +46,7 @@ export class UserService {
         user.areaId,
         user.userId,
         user.active,
-        user.userType
+        user.userType,
       ];
       await this.dbService.query(sqlQuery, sqlData);
       return true;
@@ -63,7 +68,7 @@ export class UserService {
         user.areaId,
         user.userId,
         user.active,
-        user.userType
+        user.userType,
       ];
       await this.dbService.query(sqlQuery, sqlData);
       return true;
