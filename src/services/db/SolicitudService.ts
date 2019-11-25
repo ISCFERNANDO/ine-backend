@@ -66,10 +66,11 @@ export class SolicitudService {
     }
   }
 
-  async getAllRequest() {
+  async getAllRequest(userId: number) {
     try {
       let sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_REQUESTS;
-      const resultSet = await this.dbService.query(sqlQuery);
+      const sqlData = [userId];
+      const resultSet = await this.dbService.query(sqlQuery, sqlData);
       let requests: SolicitudResponse[] = resultSet;
       return requests;
     } catch (err) {
@@ -77,10 +78,11 @@ export class SolicitudService {
     }
   }
 
-  async getUnconfirmedRequest() {
+  async getUnconfirmedRequest(userId: number) {
     try {
       let sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_REQUESTS_NO_CONFIRMED;
-      const resultSet = await this.dbService.query(sqlQuery);
+      const sqlData = [userId];
+      const resultSet = await this.dbService.query(sqlQuery, sqlData);
       let requests: SolicitudResponse[] = resultSet;
       return requests;
     } catch (err) {
@@ -112,11 +114,12 @@ export class SolicitudService {
   }
 
   async getPedingRequests(
-    carId: number
+    carId: number,
+    userId: number
   ): Promise<SolicitudPendienteResponse[]> {
     try {
       let sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_REQUESTS_PENDING;
-      let sqlData = [carId];
+      let sqlData = [carId, userId];
 
       const resultSet = await this.dbService.query(sqlQuery, sqlData);
       const solicitudesPendientes: SolicitudPendienteResponse[] = resultSet;

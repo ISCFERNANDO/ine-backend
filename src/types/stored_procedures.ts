@@ -4,10 +4,10 @@ export const STORED_PROCEDURES = {
     SP_LOGIN: "CALL sp_login(?, ?)",
     SP_GET_AREA: "CALL sp_get_area()",
     SP_GET_VEHICULO: "CALL sp_get_vehiculo()",
-    SP_GET_REQUESTS: "CALL sp_obtener_solicitudes()",
-    SP_GET_REQUESTS_NO_CONFIRMED: "CALL sp_obtener_solicitudes_sin_confirmar()",
+    SP_GET_REQUESTS: "CALL sp_obtener_solicitudes(?)",
+    SP_GET_REQUESTS_NO_CONFIRMED: "CALL sp_obtener_solicitudes_sin_confirmar(?)",
     SP_GET_CATALOG_INCIDENTS: "CALL sp_obtener_catalogo_incidencias()",
-    SP_GET_REQUESTS_PENDING: "CALL sp_obtener_solicitudes_pendientes(?)",
+    SP_GET_REQUESTS_PENDING: "CALL sp_obtener_solicitudes_pendientes(?, ?)",
     SP_GET_GASOLINE: "CALL sp_obtener_cat_gasolina()",
     SP_GET_USER_TYPES: "CALL sp_get_tipos_usuario()"
   },

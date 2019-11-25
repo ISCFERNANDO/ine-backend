@@ -37,7 +37,13 @@ export class RequestController {
       if (!result) {
         res
           .status(HTTPStatusCodes.CONFLICT)
-          .json(ResponseErrorJson(HTTPStatusCodes.CONFLICT, result, "El automovil solicitado no está disponible"));
+          .json(
+            ResponseErrorJson(
+              HTTPStatusCodes.CONFLICT,
+              result,
+              "El automovil solicitado no está disponible"
+            )
+          );
       } else {
         res
           .status(HTTPStatusCodes.OK)
@@ -88,9 +94,10 @@ export class RequestController {
   }
 
   @Get()
-  async getAllRequest(@Res() res) {
+  async getAllRequest(@Res() res, @Req() req) {
     try {
-      const result = await this.solicitudService.getAllRequest();
+      let user = req.user;
+      const result = await this.solicitudService.getAllRequest(user.id);
       res
         .status(HTTPStatusCodes.OK)
         .json(ResponseOkJson(HTTPStatusCodes.OK, result, "OK"));
@@ -108,9 +115,10 @@ export class RequestController {
   }
 
   @Get("/unconfirmed")
-  async getUnconfirmedRequests(@Res() res) {
+  async getUnconfirmedRequests(@Res() res, @Req() req) {
     try {
-      const result = await this.solicitudService.getUnconfirmedRequest();
+      let user = req.user;
+      const result = await this.solicitudService.getUnconfirmedRequest(user.id);
       res
         .status(HTTPStatusCodes.OK)
         .json(ResponseOkJson(HTTPStatusCodes.OK, result, "OK"));
@@ -148,9 +156,17 @@ export class RequestController {
   }
 
   @Get("/byCar/:carId")
-  async getAllRequestsPending(@Res() res, @PathParams("carId") carId: number) {
+  async getAllRequestsPending(
+    @Res() res,
+    @PathParams("carId") carId: number,
+    @Req() req
+  ) {
     try {
-      const data = await this.solicitudService.getPedingRequests(carId);
+      let user = req.user;
+      const data = await this.solicitudService.getPedingRequests(
+        carId,
+        user.id
+      );
       res
         .status(HTTPStatusCodes.OK)
         .json(ResponseOkJson(HTTPStatusCodes.OK, data, HTTPStatus.OK));
