@@ -67,7 +67,7 @@ export class UserController {
       user.password = body.password;
       user.secondLastName = body.secondLastName;
       user.userId = body.id;
-      user.userType = body.userType;
+      user.userType = body.userTypeId;
 
       const result = await this.userService.create(user);
       res
