@@ -37,7 +37,7 @@ export class AuthMiddleware implements IMiddleware {
         .status(HTTPStatusCodes.FORBIDDEN)
         .json(
           ResponseErrorJson(
-            HTTPStatusCodes.UNAUTHORIZED,
+            HTTPStatusCodes.FORBIDDEN,
             "La sesión ha caducado. Favor de iniciar sesión."
           )
         );

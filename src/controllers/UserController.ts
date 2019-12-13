@@ -122,6 +122,7 @@ export class UserController {
   }
 
   @Get("/userType")
+  @Authenticated()
   async userTypes(@Req() req, @Res() res) {
     try {
       const result = await this.userService.getTypesUser();
@@ -142,6 +143,7 @@ export class UserController {
   }
 
   @Get()
+  @Authenticated()
   async getUsers(@Req() req, @Res() res) {
     try {
       const result = await this.userService.getUsers();
