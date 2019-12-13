@@ -9,6 +9,7 @@ import {
 } from "../../models/response/UserLoginResponse";
 import { JsonWebToken } from "../../utils/JsonWebToken";
 import { UserType } from "../../models/response/UserType";
+import { User } from "../../models/response/User";
 
 @Service()
 export class UserService {
@@ -85,6 +86,17 @@ export class UserService {
       return userTypes;
     } catch (err) {
       throw err;
+    }
+  }
+
+  async getUsers(): Promise<User[] | any>{
+    try{
+      let sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_USERS;
+      const resultSet = await this.dbService.query(sqlQuery);
+      const users: User[] = resultSet;
+      return users;
+    }catch(e){
+      return e;
     }
   }
 }
