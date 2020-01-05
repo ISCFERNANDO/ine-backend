@@ -5,11 +5,12 @@ import { CreateUser } from "../../models/request/CreateUser";
 import { throws } from "assert";
 import {
   UserLoginResponse,
-  Accesse,
+  Accesse
 } from "../../models/response/UserLoginResponse";
 import { JsonWebToken } from "../../utils/JsonWebToken";
 import { UserType } from "../../models/response/UserType";
 import { User } from "../../models/response/User";
+import { RecoverPassword } from "../../models/request/RecoverPassword";
 
 @Service()
 export class UserService {
@@ -47,7 +48,7 @@ export class UserService {
         user.areaId,
         user.userId,
         user.active,
-        user.userType,
+        user.userType
       ];
       await this.dbService.query(sqlQuery, sqlData);
       return true;
@@ -69,7 +70,7 @@ export class UserService {
         user.areaId,
         user.userId,
         user.active,
-        user.userType,
+        user.userType
       ];
       await this.dbService.query(sqlQuery, sqlData);
       return true;
@@ -89,14 +90,26 @@ export class UserService {
     }
   }
 
-  async getUsers(): Promise<User[] | any>{
-    try{
+  async getUsers(): Promise<User[] | any> {
+    try {
       let sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_USERS;
       const resultSet = await this.dbService.query(sqlQuery);
       const users: User[] = resultSet;
       return users;
-    }catch(e){
+    } catch (e) {
       return e;
+    }
+  }
+
+  async recoverPassword(recoverPassword: RecoverPassword) {
+    try {
+      const sqlQuery: string =
+        STORED_PROCEDURES.CREATE_UPDATE.SP_RECOVER_PASSWORD;
+      const sqlData = [recoverPassword.email, recoverPassword.password];
+      const resultSet = await this.dbService.query(sqlQuery, sqlData);
+      return resultSet;
+    } catch (err) {
+      throw err;
     }
   }
 }

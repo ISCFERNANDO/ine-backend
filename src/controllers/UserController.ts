@@ -7,11 +7,13 @@ import {
   Post,
   Authenticated,
   Put,
+  BodyParams
 } from "@tsed/common";
 import { HTTPStatusCodes, HTTPStatus } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
 import { UserService } from "../services/db/UserService";
 import { CreateUser } from "../models/request/CreateUser";
+import { RecoverPassword } from "../models/request/RecoverPassword";
 
 @Controller("/users")
 export class UserController {
@@ -150,6 +152,39 @@ export class UserController {
       res
         .status(HTTPStatusCodes.OK)
         .json(ResponseOkJson(HTTPStatusCodes.OK, result, HTTPStatus.OK));
+    } catch (err) {
+      res
+        .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(
+          ResponseErrorJson(
+            HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+            err,
+            HTTPStatus.INTERNAL_SERVER_ERROR
+          )
+        );
+    }
+  }
+
+  @Post("/recoverPassword")
+  async recoverPassword(
+    @Req() req,
+    @Res() res,
+    @BodyParams() recover: RecoverPassword
+  ) {
+    try {
+      const result = await this.userService.recoverPassword(recover);
+      console.log(result);
+      if (result[0].code === 0) {
+        res
+          .status(HTTPStatusCodes.NOT_FOUND)
+          .json(
+            ResponseOkJson(HTTPStatusCodes.NOT_FOUND, result[0], result[0].message)
+          );
+      } else {
+        res
+          .status(HTTPStatusCodes.OK)
+          .json(ResponseOkJson(HTTPStatusCodes.OK, result[0], result[0].message));
+      }
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
