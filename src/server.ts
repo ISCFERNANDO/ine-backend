@@ -13,13 +13,15 @@ import * as Path from "path";
 
 @ServerSettings({
   rootDir,
-  acceptMimes: ["application/json"],
+  acceptMimes: ["application/json", "multipart/form-data"],
   httpPort: process.env.PORT || 3000,
   httpsPort: false,
   mount: {
     "/api/v1": `${rootDir}/controllers/**/**.{js,ts}`
   },
   componentsScan: [`${rootDir}/middlewares/**/**.{js,ts}`],
+  //uploadDir: `${Path.join(rootDir, "..", "media")}/cars`,
+  uploadDir: `${rootDir}/custom-dir`,
   statics: {
     "/media": `${Path.join(rootDir, "..", "media")}`
   },
@@ -27,7 +29,10 @@ import * as Path from "path";
     {
       path: "/api-docs-v1"
     }
-  ]
+  ],
+  multer: {
+    // see multer options
+  }
 })
 export class Server extends ServerLoader {
   /**

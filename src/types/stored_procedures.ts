@@ -22,7 +22,7 @@ export const STORED_PROCEDURES = {
       "CALL sp_agregar_mantenimiento(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     SP_ADD_INCIDENCE: "CALL sp_agregar_incidencia(?, ?, ?, ?, ?, ?, ?, ?)",
     SP_ADD_REQUEST_INCIDENCE: "CALL sp_agregar_golpes_fallas_solicitud(?, ?)",
-    SP_ADD_CAR: "CALL sp_agregar_automovil(?, ?, ?, ?, ?, ?, ?)",
+    SP_ADD_CAR: "CALL sp_agregar_automovil(?, ?, ?, ?, ?, ?, ?, ?)",
     SP_RECOVER_PASSWORD: "CALL sp_recuperar_password(?, ?)"
   },
   DELETE: {
