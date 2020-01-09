@@ -27,4 +27,6 @@ export class CreateRequest {
   orderTime: string;
   @Property()
   deliveryTime: string;
+  @Property()
+  sendMail: boolean;
 }

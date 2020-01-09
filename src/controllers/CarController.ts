@@ -12,11 +12,12 @@ import { HTTPStatusCodes } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
 import { VehiculoService } from "../services/db/VehiculoService";
 import { CreateCar } from "../models/request/CreateCar";
-import { MulterOptions, MultipartFile } from "@tsed/multipartfiles";
+const multer = require("multer");
 
 @Controller("/cars")
 @Authenticated()
 export class CarController {
+  upload = multer({ dest: "media/cars/uploads/" }).single("image");
   constructor(private vehiculoService: VehiculoService) {}
 
   @Get()
@@ -64,36 +65,42 @@ export class CarController {
     }
   }
 
-  /*@Post("/image")
-  //@Responses("201", {description: "Created"})
-  //@Responses("400", {description: "Bad Request"})
-  @MulterOptions({ dest: `${process.cwd()}/.tmp` })
-  async add(
-    @Req() req,
-    @Res() res,
-    @Next() next,
-    //@MultipartFile("file") file: Express.Multer.File
-  ) {
-    //let multerFile: Express.Multer.File;
-    //console.log("file: ", file);
-
+  @Post("/image")
+  async uploadFile(req, res) {
     try {
-      if (!req.files) {
-        res
-          .status(HTTPStatusCodes.BAD_REQUEST)
-          .json(
-            ResponseOkJson(
-              HTTPStatusCodes.BAD_REQUEST,
-              {},
-              "No se proporciono un archivo"
-            )
-          );
-        return;
-      }
+      this.upload(req, res, function(err) {
+        console.log(req.file);
+        if (err instanceof multer.MulterError) {
+          res
+            .status(HTTPStatusCodes.BAD_REQUEST)
+            .json(
+              ResponseOkJson(
+                HTTPStatusCodes.BAD_REQUEST,
+                {},
+                "No se proporciono un archivo"
+              )
+            );
+          return;
+        } else if (err) {
+          res
+            .status(HTTPStatusCodes.BAD_REQUEST)
+            .json(
+              ResponseOkJson(
+                HTTPStatusCodes.BAD_REQUEST,
+                {},
+                "No se proporciono un archivo"
+              )
+            );
+          return;
+        }
+      });
+      res
+        .status(HTTPStatusCodes.OK)
+        .json(ResponseOkJson(HTTPStatusCodes.OK, {}, "OK"));
     } catch (err) {
       res
         .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
         .json(ResponseErrorJson(HTTPStatusCodes.INTERNAL_SERVER_ERROR, {}));
     }
-  }*/
+  }
 }

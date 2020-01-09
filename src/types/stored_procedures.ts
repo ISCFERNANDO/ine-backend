@@ -11,7 +11,8 @@ export const STORED_PROCEDURES = {
     SP_GET_GASOLINE: "CALL sp_obtener_cat_gasolina()",
     SP_GET_USER_TYPES: "CALL sp_get_tipos_usuario()",
     SP_GET_USERS: "CALL sp_get_usuarios()",
-    SP_GET_HISTORIC_REQUEST: "CALL sp_historial_solicitudes()"
+    SP_GET_HISTORIC_REQUEST: "CALL sp_historial_solicitudes()",
+    SP_GET_MAILS_FOR_NOTIFICATION: "CALL sp_obtener_mails()"
   },
   CREATE_UPDATE: {
     SP_CREATE_UPDATE_USER: "CALL sp_create_update_user(?, ?, ?, ?, ?, ?, ?, ?, ?)",

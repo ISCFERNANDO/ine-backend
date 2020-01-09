@@ -8,18 +8,22 @@ import {
   BodyParams,
   Delete,
   Authenticated,
-  Req,
+  Req
 } from "@tsed/common";
 import { HTTPStatusCodes, HTTPStatus } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
 import { SolicitudService } from "../services/db/SolicitudService";
 import { CreateRequest } from "../models/request/CreateRequest";
 import { UpdateRequest } from "../models/request/UpdateRequest";
+import { EmailService } from "../services/utils/EmailService";
 
 @Controller("/requests")
 @Authenticated()
 export class RequestController {
-  constructor(private solicitudService: SolicitudService) {}
+  constructor(
+    private solicitudService: SolicitudService,
+    private emailService: EmailService
+  ) {}
 
   @Post()
   async addRequest(
@@ -45,6 +49,35 @@ export class RequestController {
             )
           );
       } else {
+        if (request.sendMail) {
+          let mails = await this.solicitudService.getMails();
+          mails = mails.map(item => item.mail);
+          console.log(mails);
+          //send mail
+          console.log("Sending mail...");
+          /**
+           * "",
+        "iscluis@hotmail.com",
+        "Prueba de envio",
+        "",
+        "<p>Este es un parrafo</p>"
+           */
+
+          /**
+            * this.from = from;
+    this.to = to;
+    this.subject = subject;
+    this.text = text;
+    this.html = html;
+            */
+          await this.emailService.send({
+            from: "",
+            html: "<p>Se genero una solicitud</p>",
+            subject: "",
+            text: "Notificación de registro de solicitud",
+            to: mails
+          });
+        }
         res
           .status(HTTPStatusCodes.OK)
           .json(ResponseOkJson(HTTPStatusCodes.OK, result, HTTPStatus.OK));

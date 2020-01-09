@@ -26,7 +26,7 @@ export class SolicitudService {
         request.requestedFuel,
         userId,
         request.orderTime,
-        request.deliveryTime,
+        request.deliveryTime
       ];
 
       //add request
@@ -55,7 +55,7 @@ export class SolicitudService {
         requestId,
         request.finalMileage,
         request.finalGasoline,
-        userId,
+        userId
       ];
       await this.dbService.query(sqlQuery, sqlData);
       //add bumps and failures
@@ -124,6 +124,18 @@ export class SolicitudService {
       const resultSet = await this.dbService.query(sqlQuery, sqlData);
       const solicitudesPendientes: SolicitudPendienteResponse[] = resultSet;
       return solicitudesPendientes;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getMails(): Promise<any> {
+    try {
+      let sqlQuery: string =
+        STORED_PROCEDURES.GET.SP_GET_MAILS_FOR_NOTIFICATION;
+      const resultSet = await this.dbService.query(sqlQuery);
+      const mails: any[] = resultSet;
+      return mails;
     } catch (err) {
       throw err;
     }

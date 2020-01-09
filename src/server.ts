@@ -3,6 +3,7 @@ import {
   ServerSettings,
   GlobalAcceptMimesMiddleware
 } from "@tsed/common";
+//import "@tsed/multipartfiles";
 import "@tsed/swagger";
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
