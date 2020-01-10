@@ -39,4 +39,14 @@ export class VehiculoService {
       throw err;
     }
   }
+
+  async getCatalogCars(){
+    try{
+      const sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_CATALOG_CARS;
+      const resultSet = await this.dbService.query(sqlQuery);
+      return resultSet;
+    }catch(err){
+      throw err;
+    }
+  }
 }
