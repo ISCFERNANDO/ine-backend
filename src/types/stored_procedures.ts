@@ -13,7 +13,8 @@ export const STORED_PROCEDURES = {
     SP_GET_USERS: "CALL sp_get_usuarios()",
     SP_GET_HISTORIC_REQUEST: "CALL sp_historial_solicitudes()",
     SP_GET_MAILS_FOR_NOTIFICATION: "CALL sp_obtener_mails()",
-    SP_GET_CATALOG_CARS: "CALL sp_obtener_catalogo_automoviles()"
+    SP_GET_CATALOG_CARS: "CALL sp_obtener_catalogo_automoviles()",
+    SP_GET_REQUEST_REPORTS: "CALL sp_obtener_reporte_solicitudes()"
   },
   CREATE_UPDATE: {
     SP_CREATE_UPDATE_USER: "CALL sp_create_update_user(?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -25,7 +26,9 @@ export const STORED_PROCEDURES = {
     SP_ADD_INCIDENCE: "CALL sp_agregar_incidencia(?, ?, ?, ?, ?, ?, ?, ?)",
     SP_ADD_REQUEST_INCIDENCE: "CALL sp_agregar_golpes_fallas_solicitud(?, ?)",
     SP_ADD_CAR: "CALL sp_agregar_automovil(?, ?, ?, ?, ?, ?, ?, ?)",
-    SP_RECOVER_PASSWORD: "CALL sp_recuperar_password(?, ?)"
+    SP_RECOVER_PASSWORD: "CALL sp_recuperar_password(?, ?)",
+    SP_ADD_FILE_MAINTENANCE: "CALL sp_agregar_archivo_mantenimiento(?)",
+    SP_UPDATE_FILE_TO_MAINTENANCE: "CALL sp_asociar_archivos_con_mantenimiento(?, ?)"
   },
   DELETE: {
     SP_DELETE_REQUEST: "CALL sp_eliminar_solicitud(?)",

@@ -18,9 +18,9 @@ export class MaintenanceController {
     try {
       console.log(res);
       console.log(maintenance);
-      const result = true/*await this.maintenanceService.createMaintenance(
+      const result = await this.maintenanceService.createMaintenance(
         maintenance
-      );*/
+      );
       res
         .status(HTTPStatusCodes.OK)
         .json(ResponseOkJson(HTTPStatusCodes.OK, result, "OK"));

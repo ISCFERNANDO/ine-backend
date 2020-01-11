@@ -9,8 +9,8 @@ export class MantenimientoService {
 
   async createMaintenance(maintenance: CreateMantenimiento) {
     try {
-      let sqlQuery: string = STORED_PROCEDURES.CREATE_UPDATE.SP_CREATE_REQUEST;
-      const sqlData = [
+      let sqlQuery: string = STORED_PROCEDURES.CREATE_UPDATE.SP_ADD_MANITENANCE;
+      let sqlData = [
         maintenance.vehiculoId,
         maintenance.kilometraje,
         maintenance.motivoServicio,
@@ -23,7 +23,19 @@ export class MantenimientoService {
         maintenance.facturaFileName,
         maintenance.facturaFile
       ];
-      await this.dbService.query(sqlQuery, sqlData);
+
+      const resultSet = await this.dbService.query(sqlQuery, sqlData);
+      const maintenanceId = resultSet[0].id;
+      //asociar los archivos
+      sqlQuery = STORED_PROCEDURES.CREATE_UPDATE.SP_UPDATE_FILE_TO_MAINTENANCE;
+      const promises = [];
+      for (const fileId of maintenance.files) {
+        sqlData = [fileId, maintenanceId];
+        promises.push(this.dbService.query(sqlQuery, sqlData));
+      }
+      if (promises.length > 0) {
+        await Promise.all(promises);
+      }
       return true;
     } catch (err) {
       return err;

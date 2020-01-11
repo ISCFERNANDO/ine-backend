@@ -24,5 +24,5 @@ export class CreateMantenimiento {
   @Property()
   facturaFile: string;
   @Property()
-  files: File[];
+  files: number[];
 }
