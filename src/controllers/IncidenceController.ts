@@ -4,7 +4,7 @@ import {
   Post,
   BodyParams,
   Authenticated,
-  Get,
+  Get
 } from "@tsed/common";
 import { HTTPStatusCodes, HTTPStatus } from "../types/http";
 import { ResponseOkJson, ResponseErrorJson } from "../models/response";
@@ -38,7 +38,11 @@ export class IncidenceController {
     try {
       const result: IncidentResponse[] = await this.incidenceService.getCatalogIncidents();
       if (Array.isArray(result)) {
-        result.forEach(item => (item.icon = this.hostMedia + item.icon));
+        result.forEach(item => {
+          if (item.icon) {
+            item.icon = this.hostMedia + item.icon;
+          }
+        });
       }
       res
         .status(HTTPStatusCodes.OK)
