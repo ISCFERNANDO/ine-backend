@@ -14,7 +14,9 @@ export const STORED_PROCEDURES = {
     SP_GET_HISTORIC_REQUEST: "CALL sp_historial_solicitudes()",
     SP_GET_MAILS_FOR_NOTIFICATION: "CALL sp_obtener_mails()",
     SP_GET_CATALOG_CARS: "CALL sp_obtener_catalogo_automoviles()",
-    SP_GET_REQUEST_REPORTS: "CALL sp_obtener_reporte_solicitudes(?, ?, ?)"
+    SP_GET_REQUEST_REPORTS: "CALL sp_obtener_reporte_solicitudes(?, ?, ?)",
+    SP_GET_MAITENANCE_REPORTS: "CALL sp_obtener_reporte_mantenimiento(?, ?)",
+    SP_GET_MANITENANCE_FILES_BY_MAINTENANCE: "CALL sp_obtener_documentos_mantenimiento(?)"
   },
   CREATE_UPDATE: {
     SP_CREATE_UPDATE_USER: "CALL sp_create_update_user(?, ?, ?, ?, ?, ?, ?, ?, ?)",

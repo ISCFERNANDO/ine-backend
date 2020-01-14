@@ -44,4 +44,34 @@ export class ReporteController {
         );
     }
   }
+
+  @Get("/maintenances")
+  async maintenanceReports(
+    @Req() req,
+    @Res() res,
+    @QueryParams("carsId") carsId: string,
+    @QueryParams("dateInit") dateInit: string,
+    @QueryParams("dateEnd") dateEnd: string
+  ) {
+    try {
+      const data = await this.reportsService.maintenanceReports(
+        carsId.split(","),
+        dateInit,
+        dateEnd
+      );
+      res
+        .status(HTTPStatusCodes.OK)
+        .json(ResponseOkJson(HTTPStatusCodes.OK, data, HTTPStatus.OK));
+    } catch (err) {
+      res
+        .status(HTTPStatusCodes.INTERNAL_SERVER_ERROR)
+        .json(
+          ResponseErrorJson(
+            HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+            err,
+            HTTPStatus.INTERNAL_SERVER_ERROR
+          )
+        );
+    }
+  }
 }
