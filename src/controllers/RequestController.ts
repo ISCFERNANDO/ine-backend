@@ -16,15 +16,19 @@ import { SolicitudService } from "../services/db/SolicitudService";
 import { CreateRequest } from "../models/request/CreateRequest";
 import { UpdateRequest } from "../models/request/UpdateRequest";
 import { EmailService } from "../services/utils/EmailService";
+import { ExcelService } from "../services/utils/Excel.service";
+import { APP } from "../settings";
 
 @Controller("/requests")
-@Authenticated()
 export class RequestController {
+  HOST_NAME: string = APP.HOST_NAME;
   constructor(
     private solicitudService: SolicitudService,
-    private emailService: EmailService
+    private emailService: EmailService,
+    private excelService: ExcelService
   ) {}
 
+  @Authenticated()
   @Post()
   async addRequest(
     @Req() req,
@@ -50,32 +54,34 @@ export class RequestController {
           );
       } else {
         if (request.sendMail) {
+          //generate excel
+          await this.excelService.createExcel(request);
+          const dataExcel: any = await this.excelService.readFile(
+            "media/reporte/excel/reporte.xlsx"
+          );
+
           let mails = await this.solicitudService.getMails();
           mails = mails.map(item => item.mail);
-          console.log(mails);
           //send mail
-          console.log("Sending mail...");
-          /**
-           * "",
-        "iscluis@hotmail.com",
-        "Prueba de envio",
-        "",
-        "<p>Este es un parrafo</p>"
-           */
 
-          /**
-            * this.from = from;
-    this.to = to;
-    this.subject = subject;
-    this.text = text;
-    this.html = html;
-            */
           await this.emailService.send({
             from: "",
-            html: "<p>Se genero una solicitud</p>",
+            html: `
+              <div>
+                <p>Se ha generado una nueva solicitud</p>
+                <br>
+                <a href="${this.HOST_NAME}requests/confirm/${result.id}">Confirmar solicitud</a>
+              <div>
+            `,
             subject: "",
             text: "Notificación de registro de solicitud",
-            to: mails
+            to: mails,
+            attachments: [
+              {
+                filename: "Solicitud de vehículo.xlsx",
+                content: Buffer.from(dataExcel)
+              }
+            ]
           });
         }
         res
@@ -96,6 +102,7 @@ export class RequestController {
     }
   }
 
+  @Authenticated()
   @Put("/:requestId")
   async updateRequest(
     @Req() req,
@@ -126,6 +133,7 @@ export class RequestController {
     }
   }
 
+  @Authenticated()
   @Get()
   async getAllRequest(@Res() res, @Req() req) {
     try {
@@ -147,6 +155,7 @@ export class RequestController {
     }
   }
 
+  @Authenticated()
   @Get("/unconfirmed")
   async getUnconfirmedRequests(@Res() res, @Req() req) {
     try {
@@ -168,6 +177,7 @@ export class RequestController {
     }
   }
 
+  @Authenticated()
   @Delete("/:requestId")
   async deleteRequest(@Res() res, @PathParams("requestId") requestId: number) {
     try {
@@ -188,6 +198,7 @@ export class RequestController {
     }
   }
 
+  @Authenticated()
   @Get("/byCar/:carId")
   async getAllRequestsPending(
     @Res() res,
@@ -214,5 +225,87 @@ export class RequestController {
           )
         );
     }
+  }
+
+  @Get("/confirm/:requestId")
+  async confirmarSolicitud(
+    @Res() res,
+    @PathParams("requestId") requestId: number,
+    @Req() req
+  ) {
+    try {
+      const resp = await this.solicitudService.confirmarSolicitud(requestId);
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.write(this.buildHtmlSuccess());
+      res.end();
+    } catch (err) {
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.write(this.buildHtmlError());
+      res.end();
+    }
+  }
+
+  buildHtmlSuccess() {
+    return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>
+          .alert {
+            padding: 20px;
+            background-color: #f44336;
+            color: white;
+            opacity: 1;
+            transition: opacity 0.6s;
+            margin-bottom: 15px;
+          }
+    
+          .alert.success {
+            background-color: #4caf50;
+          }
+        </style>
+      </head>
+      <body>
+        <h2>Mensaje de confirmación</h2>
+        <div class="alert success">
+          <strong>La solicitud se ha confirmado exitosamente</strong>
+        </div>
+      </body>
+    </html>    
+    `;
+  }
+
+  buildHtmlError() {
+    return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>
+          .alert {
+            padding: 20px;
+            background-color: #f44336;
+            color: white;
+            opacity: 1;
+            transition: opacity 0.6s;
+            margin-bottom: 15px;
+          }
+    
+          .alert.success {
+            background-color: #4caf50;
+          }
+        </style>
+      </head>
+      <body>
+        <h2>Mensaje de confirmación</h2>
+        <div class="alert">
+          <strong>No se pudo confirmar la solicitud</strong>
+        </div
+      </body>
+    </html>    
+    `;
   }
 }

@@ -2,6 +2,8 @@ import { Property } from "@tsed/common";
 
 export class CreateRequest {
   @Property()
+  id?: number;
+  @Property()
   areaId: number;
   @Property()
   vehiculoId: number;
@@ -29,4 +31,6 @@ export class CreateRequest {
   deliveryTime: string;
   @Property()
   sendMail: boolean;
+  @Property()
+  fechaCreacion?: string;
 }

@@ -7,7 +7,6 @@ import { Service } from "@tsed/di";
 export class EmailService {
   public async send(message: EmailRequest) {
     try {
-      console.log('BEFORE SETTINGS');
       let transport = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -15,10 +14,6 @@ export class EmailService {
           pass: MAILER.EMAIL_PWD,
         },
       });
-      console.log('AFTER SETTINGS');
-
-      console.log('Transport', transport);
-
       message = this.asign(message);
       await this.sendEmail(transport, message);
     } catch (e) {

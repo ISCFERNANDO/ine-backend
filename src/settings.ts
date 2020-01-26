@@ -13,6 +13,7 @@ export const APP = {
   DESCRIPTION: finalConfig.app_description,
   DEFAULT_LANG: finalConfig.app_default_lang,
   MEDIA: finalConfig.host_media,
+  HOST_NAME: finalConfig.host_name
 };
 
 export const JWT = {

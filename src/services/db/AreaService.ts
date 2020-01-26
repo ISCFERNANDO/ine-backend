@@ -17,4 +17,15 @@ export class AreaService {
       return err;
     }
   }
+
+  async getById(areaId: number){
+    try {
+      let sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_AREA_BY_ID;
+      let sqlData = [areaId];
+      const resultSet = await this.dbService.query(sqlQuery, sqlData);
+      return resultSet[0];
+    }catch(err){
+      throw err;
+    }
+  }
 }

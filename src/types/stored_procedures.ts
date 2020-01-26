@@ -16,7 +16,9 @@ export const STORED_PROCEDURES = {
     SP_GET_CATALOG_CARS: "CALL sp_obtener_catalogo_automoviles()",
     SP_GET_REQUEST_REPORTS: "CALL sp_obtener_reporte_solicitudes(?, ?, ?)",
     SP_GET_MAITENANCE_REPORTS: "CALL sp_obtener_reporte_mantenimiento(?, ?)",
-    SP_GET_MANITENANCE_FILES_BY_MAINTENANCE: "CALL sp_obtener_documentos_mantenimiento(?)"
+    SP_GET_MANITENANCE_FILES_BY_MAINTENANCE: "CALL sp_obtener_documentos_mantenimiento(?)",
+    SP_GET_AREA_BY_ID: "CALL sp_get_area_by_id(?)",
+    SP_GET_VEHICULO_BY_ID: 'CALL sp_get_vehiculo_by_id(?)'
   },
   CREATE_UPDATE: {
     SP_CREATE_UPDATE_USER: "CALL sp_create_update_user(?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -30,7 +32,8 @@ export const STORED_PROCEDURES = {
     SP_ADD_CAR: "CALL sp_agregar_automovil(?, ?, ?, ?, ?, ?, ?, ?)",
     SP_RECOVER_PASSWORD: "CALL sp_recuperar_password(?, ?)",
     SP_ADD_FILE_MAINTENANCE: "CALL sp_agregar_archivo_mantenimiento(?)",
-    SP_UPDATE_FILE_TO_MAINTENANCE: "CALL sp_asociar_archivos_con_mantenimiento(?, ?)"
+    SP_UPDATE_FILE_TO_MAINTENANCE: "CALL sp_asociar_archivos_con_mantenimiento(?, ?)",
+    SP_CONFIRM_REQUEST: "CALL sp_confirmar_solicitud(?)"
   },
   DELETE: {
     SP_DELETE_REQUEST: "CALL sp_eliminar_solicitud(?)",

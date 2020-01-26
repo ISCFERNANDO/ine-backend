@@ -49,4 +49,15 @@ export class VehiculoService {
       throw err;
     }
   }
+
+  async getVehiculoById(vehiculoId: number){
+    try{
+      const sqlQuery: string = STORED_PROCEDURES.GET.SP_GET_VEHICULO_BY_ID;
+      const sqlData = [vehiculoId];
+      const resultSet = await this.dbService.query(sqlQuery, sqlData);
+      return resultSet[0];
+    }catch(err){
+      throw err;
+    }
+  }
 }

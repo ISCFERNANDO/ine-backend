@@ -31,14 +31,16 @@ export class SolicitudService {
 
       //add request
       let resultSet = await this.dbService.query(sqlQuery, sqlData);
-      let estatus = resultSet[0];
+      let estatus = resultSet[0][0];
       if (estatus.code === 0) {
         return false;
       }
-      let { id } = resultSet[1];
+      let { id, fechaCreacion } = resultSet[1][0];
       //add bumps and failures
       await this.addFailuresRequest(id, request.bumpsFailures);
-      return true;
+      request.id = id;
+      request.fechaCreacion = fechaCreacion;
+      return request;
     } catch (err) {
       throw err;
     }
@@ -139,5 +141,16 @@ export class SolicitudService {
     } catch (err) {
       throw err;
     }
+  }
+
+  async confirmarSolicitud(solicitudId: number){
+      try{
+        let sqlQuery: string = STORED_PROCEDURES.CREATE_UPDATE.SP_CONFIRM_REQUEST;
+        const sqlData = [solicitudId];
+        const resultSet = await this.dbService.query(sqlQuery, sqlData);
+        return resultSet[0];
+      }catch(err){
+        throw err;
+      }
   }
 }
