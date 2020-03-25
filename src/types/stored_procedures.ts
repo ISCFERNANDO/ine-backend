@@ -18,7 +18,8 @@ export const STORED_PROCEDURES = {
     SP_GET_MAITENANCE_REPORTS: "CALL sp_obtener_reporte_mantenimiento(?, ?)",
     SP_GET_MANITENANCE_FILES_BY_MAINTENANCE: "CALL sp_obtener_documentos_mantenimiento(?)",
     SP_GET_AREA_BY_ID: "CALL sp_get_area_by_id(?)",
-    SP_GET_VEHICULO_BY_ID: 'CALL sp_get_vehiculo_by_id(?)'
+    SP_GET_VEHICULO_BY_ID: 'CALL sp_get_vehiculo_by_id(?)',
+    SP_GET_SOLICITUDES_AUTOMOVILES: 'CALL sp_obtener_solicitudes_automoviles()'
   },
   CREATE_UPDATE: {
     SP_CREATE_UPDATE_USER: "CALL sp_create_update_user(?, ?, ?, ?, ?, ?, ?, ?, ?)",
