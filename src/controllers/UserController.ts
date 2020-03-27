@@ -30,7 +30,6 @@ export class UserController {
       user.areaId = body.areaId;
       user.email = body.email;
       user.firstLastName = body.firstLastName;
-      user.name = body.name;
       user.password = body.password;
       user.secondLastName = body.secondLastName;
       user.userId = -1;
@@ -65,7 +64,6 @@ export class UserController {
       user.areaId = body.areaId;
       user.email = body.email;
       user.firstLastName = body.firstLastName;
-      user.name = body.name;
       user.password = body.password;
       user.secondLastName = body.secondLastName;
       user.userId = body.id;

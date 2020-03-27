@@ -2,20 +2,21 @@ import { Service } from "@tsed/di";
 import { DatabaseService } from "./database";
 import { STORED_PROCEDURES } from "../../types/stored_procedures";
 import { DateUtilsService } from "../utils/date-utils.service";
+import { EstadisticaSolicitud } from "../../models/response/EstadisticaSolicitudResponse";
 
 @Service()
 export class EstadisticaService {
   constructor(
     private dbService: DatabaseService,
     private dateUtilsService: DateUtilsService
-  ) {}
+  ) { }
 
-  async getSolicitudesAutomoviles() {
+  async getSolicitudesAutomoviles(): Promise<EstadisticaSolicitud[]> {
     try {
       let sqlQuery: string =
         STORED_PROCEDURES.GET.SP_GET_SOLICITUDES_AUTOMOVILES;
       const resultSet: any[] = await this.dbService.query(sqlQuery);
-      const listOfRequests = this.buildDatesWithData(resultSet);
+      const listOfRequests: EstadisticaSolicitud[] = this.buildDatesWithData(resultSet);
       return listOfRequests;
     } catch (err) {
       console.log(err);
@@ -23,34 +24,64 @@ export class EstadisticaService {
     }
   }
 
-  buildDatesWithData(listOfRequests: any[]) {
-    const newListOfRequest = [];
+  buildDatesWithData(listOfRequests: any[]): EstadisticaSolicitud[] {
+    const listOfDataStatistic: EstadisticaSolicitud[] = [];
+    let dataStatistic: EstadisticaSolicitud;
     if (listOfRequests.length > 0) {
-      const { fechaSolicitud: fechaInicial } = listOfRequests[0];
-      const { fechaSolicitud: fechaFinal } = listOfRequests[
+      let { fechaSolicitud: fechaInicial } = listOfRequests[0];
+      let { fechaSolicitud: fechaFinal } = listOfRequests[
         listOfRequests.length - 1
       ];
-      let dateLeft = new Date(fechaInicial);
-      const dateRight = new Date(fechaFinal);
+      fechaInicial = this.dateUtilsService.parseISO(fechaInicial);
+      fechaFinal = this.dateUtilsService.parseISO(fechaFinal);
+      let mesAnterior: number = this.dateUtilsService.obtenerMes(fechaInicial);
+      let mesActual: number = this.dateUtilsService.obtenerMes(fechaInicial);
 
-      while (
-        [-1, 0].includes(this.dateUtilsService.compareDate(dateLeft, dateRight))
-      ) {
-        const dateLeftFormated = this.dateUtilsService.formatYYYYMMDD(dateLeft);
-        const listOfRequestForDateLeft = listOfRequests.filter(
-          request => request.fechaSolicitud === dateLeftFormated
+      dataStatistic = new EstadisticaSolicitud();
+      dataStatistic.mesId = mesAnterior;
+      dataStatistic.nombreMes = this.dateUtilsService.getMonthName(mesAnterior);
+      dataStatistic.anio = this.dateUtilsService.getYear(fechaInicial);
+
+      while (this.fechaInicialMenorIgualFechaFinal(fechaInicial, fechaFinal)) {
+        const dateLeftFormated = this.dateUtilsService.formatYYYYMMDD(fechaInicial);
+        const total = this.getListOfRequestForDate(
+          listOfRequests,
+          dateLeftFormated
         );
-        newListOfRequest.push({
+        if (mesAnterior !== mesActual) {
+          listOfDataStatistic.push(dataStatistic);
+          dataStatistic = new EstadisticaSolicitud();
+          mesAnterior = mesActual;
+          dataStatistic.mesId = mesAnterior;
+          dataStatistic.nombreMes = this.dateUtilsService.getMonthName(mesAnterior);
+          dataStatistic.anio = this.dateUtilsService.getYear(fechaInicial);
+        }
+        dataStatistic.datos.push({
           fecha: dateLeftFormated,
-          total: listOfRequestForDateLeft.length
+          total
         });
-        listOfRequests = listOfRequests.slice(
-          listOfRequestForDateLeft.length - 1,
-          listOfRequests.length
-        );
-        dateLeft = this.dateUtilsService.addDay(dateLeft, 1);
+        fechaInicial = this.dateUtilsService.addDay(fechaInicial, 1);
+        mesActual = this.dateUtilsService.obtenerMes(fechaInicial);
+      }
+
+      if (dataStatistic.datos.length > 0) {
+        listOfDataStatistic.push(dataStatistic);
       }
     }
-    return newListOfRequest;
+    return listOfDataStatistic;
+  }
+
+  getListOfRequestForDate(listOfRequests: any[], dateFormatedYYYMMDD: string): number {
+    const listOfRequestForDate = listOfRequests.filter(
+      request => request.fechaSolicitud === dateFormatedYYYMMDD
+    );
+    return listOfRequestForDate.length > 0 ?
+      listOfRequestForDate.reduce((a, b) => a.total + b.total).total : 0;
+  }
+
+  fechaInicialMenorIgualFechaFinal(fechaInicial: Date, fechaFinal: Date): boolean {
+    return [-1, 0].includes(
+      this.dateUtilsService.compareDate(fechaInicial, fechaFinal)
+    );
   }
 }
