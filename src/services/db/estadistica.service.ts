@@ -11,20 +11,23 @@ export class EstadisticaService {
     private dateUtilsService: DateUtilsService
   ) { }
 
-  async getSolicitudesAutomoviles(): Promise<EstadisticaSolicitud[]> {
-    try {
-      let sqlQuery: string =
-        STORED_PROCEDURES.GET.SP_GET_SOLICITUDES_AUTOMOVILES;
-      const resultSet: any[] = await this.dbService.query(sqlQuery);
-      const listOfRequests: EstadisticaSolicitud[] = this.buildDatesWithData(resultSet);
-      return listOfRequests;
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
+  public async getSolicitudesAutomoviles(): Promise<EstadisticaSolicitud[]> {
+    let sqlQuery: string =
+      STORED_PROCEDURES.GET.SP_GET_SOLICITUDES_AUTOMOVILES;
+    const resultSet: any[] = await this.dbService.query(sqlQuery);
+    const listOfRequests: EstadisticaSolicitud[] = this.buildDatesWithData(resultSet);
+    return listOfRequests;
   }
 
-  buildDatesWithData(listOfRequests: any[]): EstadisticaSolicitud[] {
+  public async getGasolinasUtilizados(): Promise<EstadisticaSolicitud[]> {
+    let sqlQuery: string =
+      STORED_PROCEDURES.GET.SP_GET_GASOLINA_UTILIZADO;
+    const resultSet: any[] = await this.dbService.query(sqlQuery);
+    const listOfRequests: EstadisticaSolicitud[] = this.buildDatesWithData(resultSet);
+    return listOfRequests;
+  }
+
+  private buildDatesWithData(listOfRequests: any[]): EstadisticaSolicitud[] {
     const listOfDataStatistic: EstadisticaSolicitud[] = [];
     let dataStatistic: EstadisticaSolicitud;
     if (listOfRequests.length > 0) {
@@ -71,7 +74,7 @@ export class EstadisticaService {
     return listOfDataStatistic;
   }
 
-  getListOfRequestForDate(listOfRequests: any[], dateFormatedYYYMMDD: string): number {
+  private getListOfRequestForDate(listOfRequests: any[], dateFormatedYYYMMDD: string): number {
     const listOfRequestForDate = listOfRequests.filter(
       request => request.fechaSolicitud === dateFormatedYYYMMDD
     );
@@ -79,7 +82,7 @@ export class EstadisticaService {
       listOfRequestForDate.reduce((a, b) => a.total + b.total).total : 0;
   }
 
-  fechaInicialMenorIgualFechaFinal(fechaInicial: Date, fechaFinal: Date): boolean {
+  private fechaInicialMenorIgualFechaFinal(fechaInicial: Date, fechaFinal: Date): boolean {
     return [-1, 0].includes(
       this.dateUtilsService.compareDate(fechaInicial, fechaFinal)
     );
